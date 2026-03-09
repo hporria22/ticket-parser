@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Validator Tools</title>
+
+<style>
+
+:root{
+--bg-light:#f1f4f9;
+--bg-dark:#0f172a;
+--card-light:#ffffff;
+--card-dark:#111827;
+--text-light:#111827;
+--text-dark:#ffffff;
+--btn-light:#1e40af;
+--btn-dark:#243a8f;
+--sun:#facc15;
+}
+
+body{
+font-family:"Segoe UI",Arial,sans-serif;
+margin:0;
+background:var(--bg-light);
+color:var(--text-light);
+transition:0.3s;
+}
+
+body.dark{
+background:var(--bg-dark);
+color:var(--text-dark);
+}
+
+.header{
+background:var(--btn-light);
+color:white;
+padding:18px;
+font-size:22px;
+text-align:center;
+position:relative;
+}
+
+body.dark .header{
+background:var(--btn-dark);
+}
+
+.container{
+width:1000px;
+margin:40px auto;
+}
+
+.grid{
+display:flex;
+gap:25px;
+justify-content:center;
+}
+
+.card{
+background:var(--card-light);
+padding:25px;
+border-radius:10px;
+width:300px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+text-align:center;
+cursor:pointer;
+transition:0.2s;
+}
+
+.card:hover{
+transform:translateY(-5px);
+}
+
+body.dark .card{
+background:var(--card-dark);
+}
+
+.card h3{
+margin-bottom:15px;
+}
+
+.hidden{
+display:none;
+}
+
+/* WO Upload section */
+
+.upload-box{
+margin-top:30px;
+background:var(--card-light);
+padding:30px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+body.dark .upload-box{
+background:var(--card-dark);
+}
+
+input[type=file]{
+width:100%;
+padding:10px;
+margin-top:10px;
+}
+
+button{
+margin-top:15px;
+width:100%;
+padding:12px;
+border:none;
+border-radius:6px;
+background:var(--btn-light);
+color:white;
+font-size:15px;
+cursor:pointer;
+}
+
+body.dark button{
+background:var(--btn-dark);
+}
+
+.coming{
+text-align:center;
+font-size:18px;
+padding:40px;
+color:#888;
+}
+
+   .page-dropdown {
+            display: inline-block;
+            position: absolute;
+            right: 60px;
+            top: 14px;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 3px;
+        }
+
+        .page-dropdown .arrow {
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .page-dropdown:hover .arrow {
+            transform: rotate(90deg);
+        }
+
+        .page-dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 20px;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .page-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .page-dropdown .dropdown-content a {
+            color: #111827;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+
+        .page-dropdown .dropdown-content a:hover {
+            background-color: #f1f4f9;
+        }
+
+        body.dark .page-dropdown .dropdown-content {
+            background-color: #111827;
+        }
+
+        body.dark .page-dropdown .dropdown-content a {
+            color: white;
+        }
+
+        body.dark .page-dropdown .dropdown-content a:hover {
+            background-color: #1f2937;
+        }
+
+</style>
+</head>
+
+
+<body>
+
+<div class="header">
+
+ServiceNow Ticket Excel Automation
+
+<div class="page-dropdown">
+▶
+<div class="dropdown-content">
+<a href="/">Ticket Automation</a>
+<a href="/extractor">Ticket Extractor</a>
+<a href="/validator">Validators</a>
+</div>
+</div>
+
+</div>
+
+
+<div class="container">
+
+<!-- TOOL CARDS -->
+
+<div class="grid">
+
+<div class="card" onclick="showTool('wo')">
+<h3>WO Validator</h3>
+<p>Validate Work Orders and export to Excel</p>
+</div>
+
+<div class="card" onclick="showTool('cm')">
+<h3>CM Validator</h3>
+</div>
+
+<div class="card" onclick="showTool('ep')">
+<h3>EP Renewal</h3>
+</div>
+
+</div>
+
+
+<!-- WO TOOL -->
+
+<div id="wo" class="upload-box">
+
+<h2>Upload Work Order</h2>
+
+<form action="/processWO" method="post" enctype="multipart/form-data">
+
+<input type="file" name="wo_file" required>
+
+<button type="submit">Validate & Generate Excel</button>
+
+</form>
+
+</div>
+
+
+<!-- CM TOOL -->
+
+<div id="cm" class="upload-box hidden">
+<div class="coming">🚧 Coming Soon</div>
+</div>
+
+
+<!-- EP TOOL -->
+
+<div id="ep" class="upload-box hidden">
+<div class="coming">🚧 Coming Soon</div>
+</div>
+
+
+</div>
+
+
+<script>
+
+
+function showTool(tool){
+
+document.getElementById("wo").classList.add("hidden");
+document.getElementById("cm").classList.add("hidden");
+document.getElementById("ep").classList.add("hidden");
+
+document.getElementById(tool).classList.remove("hidden");
+
+}
+
+</script>
+
+</body>
+</html>

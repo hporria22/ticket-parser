@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ServiceNow Ticket Extractor</title>
+    <style>
+        :root {
+            --bg-light: #f1f4f9;
+            --bg-dark: #0f172a;
+            --card-light: #ffffff;
+            --card-dark: #111827;
+            --text-light: #111827;
+            --text-dark: #ffffff;
+            --btn-light: #1e40af; /* blue */
+            --btn-dark: #10a37f; /* greenish for dark mode */
+            --btn-hover-light: #1c3a94;
+            --btn-hover-dark: #0e8a6b;
+            --sun-color: #facc15;
+        }
+
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg-light);
+            color: var(--text-light);
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+
+        /* Header */
+        .header {
+            background: var(--btn-light);
+            color: white;
+            padding: 18px;
+            font-size: 22px;
+            text-align: center;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        body.dark .header {
+            background: var(--btn-dark);
+        }
+
+        /* Page dropdown (optional) */
+        .page-dropdown {
+            display: inline-block;
+            position: absolute;
+            right: 60px;
+            top: 14px;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 3px;
+        }
+
+        .page-dropdown .arrow {
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .page-dropdown:hover .arrow {
+            transform: rotate(90deg);
+        }
+
+        .page-dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 20px;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .page-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .page-dropdown .dropdown-content a {
+            color: #111827;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+
+        .page-dropdown .dropdown-content a:hover {
+            background-color: #f1f4f9;
+        }
+
+        body.dark .page-dropdown .dropdown-content {
+            background-color: #111827;
+        }
+
+        body.dark .page-dropdown .dropdown-content a {
+            color: white;
+        }
+
+        body.dark .page-dropdown .dropdown-content a:hover {
+            background-color: #1f2937;
+        }
+
+        /* Container */
+        .container {
+            width: 900px;
+            margin: 30px auto;
+            background: var(--card-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: background 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        body.dark .container {
+            background: var(--card-dark);
+            color: var(--text-dark);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 350px;
+            padding: 15px;
+            border-radius: 10px;
+            border: none;
+            background: #e5e7eb;
+            color: #111827;
+            font-size: 14px;
+            resize: vertical;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.dark textarea {
+            background: #1f2937;
+            color: white;
+        }
+
+        button.generate {
+            margin-top: 20px;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: var(--btn-light);
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button.generate:hover {
+            background: var(--btn-hover-light);
+        }
+
+        body.dark button.generate {
+            background: var(--btn-dark);
+        }
+
+        body.dark button.generate:hover {
+            background: var(--btn-hover-dark);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 15px;
+            color: #666;
+            font-size: 13px;
+        }
+
+        /* Theme toggle button */
+        /* .theme-toggle {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--sun-color);
+            transition: background 0.3s;
+        }
+
+        body.dark .theme-toggle {
+            background: #111827;
+            color: var(--sun-color);
+        } */
+
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <div class="header">
+        ServiceNow Ticket Extractor
+
+        <!-- Page dropdown -->
+        <div class="page-dropdown">
+            <span class="arrow">▶</span>
+            <div class="dropdown-content">
+                <a href="/">Ticket Automation Tool</a>
+                <a href="/extractor">Ticket Extractor</a>
+                <a href="/validator">Validators</a>
+            </div>
+        </div>
+
+        <!-- Theme toggle -->
+        <!-- <button class="theme-toggle" id="themeBtn">☀️</button> -->
+    </div>
+
+    <!-- Main content -->
+    <div class="container">
+        <h1>ServiceNow Ticket Extractor</h1>
+        <form action="/processTickets" method="post">
+            <textarea name="ticket_text" placeholder="Paste ServiceNow tasks table here..."></textarea>
+            <button type="submit" class="generate">Generate Excel</button>
+        </form>
+        <div class="footer">Paste your tickets and click Generate Excel</div>
+    </div>
+
+    <script>
+        // // Theme toggle logic
+        // const themeBtn = document.getElementById("themeBtn");
+        // themeBtn.addEventListener("click", () => {
+        //     document.body.classList.toggle("dark");
+        //     themeBtn.textContent = document.body.classList.contains("dark") ? "🌙" : "☀️";
+        // });
+    </script>
+</body>
+
+</html>
