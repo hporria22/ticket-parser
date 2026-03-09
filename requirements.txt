@@ -3,5 +3,6 @@ uvicorn
 pandas
 openpyxl
 python-dotenv
+pdfplumber
 jinja2
 python-multipart
