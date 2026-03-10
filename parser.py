@@ -1,5 +1,6 @@
 from datetime import datetime
 import re
+from zoneinfo import ZoneInfo
 
 import pandas as pd
 import io
@@ -102,7 +103,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
 # If still empty
     if not processed_date or not action_time: 
-         now = datetime.now()
+         now = datetime.now(ZoneInfo("Asia/Kolkata"))
          processed_date = now.strftime("%m-%d-%Y")
          action_time = now.strftime("%I:%M:%S %p")
 
