@@ -1,3 +1,4 @@
+from datetime import datetime
 import re
 
 import pandas as pd
@@ -18,7 +19,7 @@ def extract(pattern, text):
 def normalize_name(name):
     if not name:
         return ""
-    name_lower = name.lower()
+    name_lower = name.lower()   
     for team in TEAM_MAPPING:
         for member in TEAM_MAPPING[team]:
             if member.lower() in name_lower:
@@ -59,7 +60,6 @@ def detect_team(assigned_to):
 
 def detect_category(ticket_text):
 
-    print("DEBUG -> detect_category input:", ticket_text)   
     for category in SUBCATEGORY_MAPPING:
 
         if category.lower() in ticket_text.lower():
@@ -72,9 +72,9 @@ def detect_category(ticket_text):
     return "", "", ""
 
 
-def parse_ticket(ticket_text):
+def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
-    ticket_number = extract(r"(RITM\d+)", ticket_text)
+    ticket_number = extract(r"(RITM\d+|INC\d+)", ticket_text)
 
     opened = extract(r"Opened\s+([0-9/]+\s+[0-9:]+\s+[APM]+)", ticket_text)
 
@@ -82,9 +82,11 @@ def parse_ticket(ticket_text):
     ticket_time = ""
 
     if opened:
-        parts = opened.split()
-        ticket_date = parts[0]
-        ticket_time = parts[1] + " " + parts[2]
+       parts = opened.split()
+       if len(parts) >= 3:
+        dt = datetime.strptime(f"{parts[0]} {parts[1]} {parts[2]}", "%d/%m/%Y %H:%M:%S %p")
+        ticket_date = dt.strftime("%m-%d-%Y")
+        ticket_time = dt.strftime("%I:%M:%S %p")
 
     action = extract(r"([0-9/]+\s+[0-9:]+\s+[APM]+)\s+Assigned", ticket_text)
 
@@ -93,19 +95,30 @@ def parse_ticket(ticket_text):
 
     if action:
         parts = action.split()
-        processed_date = parts[0]
-        action_time = parts[1] + " " + parts[2]
+        if len(parts) >= 3:
+         dt = datetime.strptime(f"{parts[0]} {parts[1]} {parts[2]}", "%d/%m/%Y %H:%M:%S %p")
+         processed_date = dt.strftime("%m-%d-%Y")
+         action_time = dt.strftime("%I:%M:%S %p")
+
+# If still empty
+    if not processed_date or not action_time: 
+         now = datetime.now()
+         processed_date = now.strftime("%m-%d-%Y")
+         action_time = now.strftime("%I:%M:%S %p")
 
 
     assigned_to_raw = extract(r"Assigned to\s+([A-Za-z .]+)", ticket_text)
     assigned_to = normalize_name(assigned_to_raw)
 
-    assigned_by = get_assigned_by(ticket_text)
-    assigned_by = normalize_name(assigned_by)  # optional, to match your TEAM_MAPPING
+    if assigned_by_ticket:
+        assigned_by = assigned_by_ticket
+    elif assigned_by_global:
+        assigned_by = assigned_by_global
+    else:
+        assigned_by = get_assigned_by(ticket_text)
 
-    print("DEBUG -> assigned_by:", assigned_by)
+    assigned_by = normalize_name(assigned_by)
 
-     
     business = extract(r"Business Unit\s+([^\n]+)", ticket_text)
 
     category, query, group = detect_category(ticket_text)
@@ -120,6 +133,7 @@ def parse_ticket(ticket_text):
         "Sub Category": category,
         "Ticket processed date": processed_date,
         "Action time": action_time,
+        "Status": "In Progress",
         "Forwarded to Dot1 or MDM": team,
         "Assigned to": assigned_to,
         "Assigned by": assigned_by,

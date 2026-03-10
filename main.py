@@ -48,10 +48,17 @@ def process(ticket_text: str = Form(...)):
 async def process_tickets(request: Request):
     form = await request.form()
     tickets = form.getlist("tickets")  # multiple ticket texts
+
+    assigned_by_global = form.get("assigned_by")
+
     processed_tickets = []
 
     for i, ticket_text in enumerate(tickets, start=1):
-        ticket_data = parse_ticket(ticket_text)
+        
+        ticket_specific_field = f"assigned_by_ticket_{i}"
+        assigned_by_ticket = form.get(ticket_specific_field)
+        ticket_data = parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket)
+
 
         # user-selected query
         query_field_name = f"query_related_{i}"
