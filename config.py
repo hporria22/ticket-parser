@@ -15,13 +15,13 @@ TEAM_MAPPING = {
     "MDM": [
         # Add MDM names here
         "Harsh",
+        "Kashish",
         "Ashish",
         "Vipul",
         "Nikita",
         "Jaydeep",
         "Kishan",
         "Roocha",
-        "Kashish"
     ]
 }
 
@@ -156,7 +156,38 @@ SUBCATEGORY_MAPPING = {
 "L4 - Change Request - New sites roll out": {
     "query": "New sites roll out",
     "group": "L4"
+},
+
+"L2 - Application Error - Others": {
+    "query": "Application Error",
+    "group": "L2"
+},
+
+"L4 - Reports - Incomplete/Error": {
+    "query": "Reports",
+    "group": "L2"
+},
+
+"L2 - Transaction - Bill verification": {
+    "query": "Bill verification",
+    "group": "L2"
+},
+
+"L2 - Transaction data - Attendance": {
+    "query": "Attendance",
+    "group": "L2"
+},
+
+"L2 - Workflow - Error": {
+    "query": "Workflow error",
+    "group": "L2"
+},
+
+"L2 - Workflow / Approval Error": {
+    "query": "Approval error",
+    "group": "L2"
 }
+
 
 }
 # Queries that user can select from frontend

@@ -245,12 +245,17 @@
 
     <div class="container">
         <form action="/process" method="post">
+            <label>Assigned by:</label>
+            <input type="text" name="assigned_by" list="assignedByList"
+                style="width:10%; padding:8px; margin-bottom:15px;">
             <div id="tickets">
                 <div class="ticket-card">
                     <div class="ticket-title">Ticket 1</div>
                     <textarea name="tickets" placeholder="Paste complete ServiceNow ticket text here"></textarea>
                     <label for="query_related_1">Query related to:</label>
                     <select name="query_related_1"></select>
+                    <label>Assigned by(if different)</label>
+                 <input type="text" name="assigned_by_ticket_1" list="assignedByList" >
                 </div>
             </div>
             <div class="actions">
@@ -258,7 +263,24 @@
             </div>
             <button class="generate">Generate Excel</button>
         </form>
+        <datalist id="assignedByList">
+            <option value="Kashish">
+            <option value="Ashish">
+            <option value="Nikita">
+            <option value="Harsh">
+            <option value="Vipul">
+            <option value="Roocha">
+            <option value="Kishan">
+            <option value="Dilleswari">
+            <option value="Utkarsh">
+            <option value="Ravindra">
+            <option value="Abhishek">
+            <option value="Pawan">
+            <option value="Ajay">
+            <option value="Rahul">
+            <option value="Jaydeep">
 
+        </datalist>
         <script type="application/json" id="dropdown-data">
             {{ query_options | tojson }}
         </script>
@@ -280,20 +302,22 @@
             card.className = "ticket-card";
 
             card.innerHTML = `
-        <div class="ticket-title">Ticket ${ticketCount}</div>
-
-        <textarea name="tickets" placeholder="Paste complete ServiceNow ticket text here"></textarea>
-
-        <label>Query related to:</label>
-
-        <select name="query_related_${ticketCount}">
-            <option value="">-- Use default from subcategory --</option>
-        </select>
-
-        <div class="actions">
-            <button type="button" class="remove" onclick="removeTicket(this)">Remove Ticket</button>
-        </div>
-    `;
+            <div class="ticket-title">Ticket ${ticketCount}</div>
+            
+            <textarea name="tickets" placeholder="Paste complete ServiceNow ticket text here"></textarea>
+            
+            <label>Query related to:</label>
+            <select name="query_related_${ticketCount}">
+            <option value="">-- default --</option>
+            </select>
+            
+            <label>Assigned by(if different)</label>
+            <input type="text" name="assigned_by_ticket_${ticketCount}" list="assignedByList" >
+            
+            <div class="actions">
+            <button type="button" class="remove" onclick="removeTicket(this)">Remove</button>
+            </div>
+            `;
 
             container.appendChild(card);
 
@@ -303,8 +327,25 @@
 
         function removeTicket(btn) {
             btn.closest(".ticket-card").remove();
+            updateTicketNumbers();
+
         }
 
+        function updateTicketNumbers() {
+
+            const cards = document.querySelectorAll(".ticket-card");
+
+            cards.forEach((card, index) => {
+
+                const title = card.querySelector(".ticket-title");
+
+                title.textContent = `Ticket ${index + 1}`;
+
+            });
+
+            ticketCount = cards.length;
+
+        }
         function populateDropdown(selectElem) {
 
             const options = JSON.parse(
@@ -329,7 +370,7 @@
 
             if (firstSelect) {
 
-                firstSelect.innerHTML = `<option value="">-- Use default from subcategory --</option>`;
+                firstSelect.innerHTML = `<option value="">default</option>`;
 
                 populateDropdown(firstSelect);
 
