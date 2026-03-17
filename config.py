@@ -192,7 +192,6 @@ SUBCATEGORY_MAPPING = {
 }
 # Queries that user can select from frontend
 QUERY_MAPPING = {
-    "Application": {"group": "L2"},
     "Application error": {"group": "L2"},
     "Attendance": {"group": "L2"},
     "Auto blocking": {"group": "L2"},

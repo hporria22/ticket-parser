@@ -107,6 +107,15 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
          processed_date = now.strftime("%m-%d-%Y")
          action_time = now.strftime("%I:%M:%S %p")
 
+    state = extract(r"State\s+([^\n]+)", ticket_text)
+
+    if state.lower() == "new":
+        state = "In Progress"
+    elif state.lower() == "resolved":
+        state = "Resolved"
+    else:
+        state = "Closed Incomplete"
+
 
     assigned_to_raw = extract(r"Assigned to\s+([A-Za-z .]+)", ticket_text)
     assigned_to = normalize_name(assigned_to_raw)
@@ -125,6 +134,32 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     category, query, group = detect_category(ticket_text)
     team = detect_team(assigned_to)
 
+    resolvedDate = ""
+    tat = ""
+    tat_to = "" 
+    resolvedField = ""
+
+    justNow = datetime.now(ZoneInfo("Asia/Kolkata"))
+
+    if state == "Resolved":
+        resolvedField = "Resolved"
+        resolvedDate = justNow.strftime("%m-%d-%Y")
+        tat = (datetime.strptime(resolvedDate, "%m-%d-%Y") -datetime.strptime(ticket_date, "%m-%d-%Y")).days
+        if team == "Dot1" :
+           tat_to = '0'
+        elif team == 'MDM':
+            tat_to = '-'
+    elif state == "Closed Incomplete":
+        resolvedField = "Closed Incomplete"
+        resolvedDate = justNow.strftime("%m-%d-%Y")
+        tat = (datetime.strptime(resolvedDate, "%m-%d-%Y") - datetime.strptime(ticket_date, "%m-%d-%Y")).days
+        if team == "Dot1" :
+           tat_to = '0'
+        elif team == 'MDM':
+            tat_to = '-'
+    else : 
+        resolvedField = ""
+
     return {
 
         "Ticket Date": ticket_date,
@@ -134,12 +169,17 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
         "Sub Category": category,
         "Ticket processed date": processed_date,
         "Action time": action_time,
-        "Status": "In Progress",
+        "Status": state,
         "Forwarded to Dot1 or MDM": team,
         "Assigned to": assigned_to,
         "Assigned by": assigned_by,
         "Query related to": query,
-        "Ticket Bucket Group": group
+        "Ticket Bucket Group": group,
+        "Remarks": "",
+        "Resolved": resolvedField or "",
+        "Resolved date":resolvedDate or "",
+        "TAT": tat,
+        "TAT to Dot1/MDM":tat_to or ""
     }
 
 
