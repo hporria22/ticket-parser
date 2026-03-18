@@ -163,7 +163,7 @@ SUBCATEGORY_MAPPING = {
     "group": "L2"
 },
 
-"L4 - Reports - Incomplete/Error": {
+"L2 - Reports - Incomplete/ Error": {
     "query": "Reports",
     "group": "L2"
 },

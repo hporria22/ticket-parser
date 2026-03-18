@@ -107,7 +107,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
          processed_date = now.strftime("%m-%d-%Y")
          action_time = now.strftime("%I:%M:%S %p")
 
-    state = extract(r"State\s+([^\n]+)", ticket_text)
+    state = extract(r"State\s*\n\s*([^\n]+)", ticket_text)
 
     if state.lower() == "new":
         state = "In Progress"
@@ -115,6 +115,8 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
         state = "Resolved"
     elif state.lower() == "on hold":
         state = "Hold"
+    elif state.lower() == "in progress":
+        state = "In Progress"
     else:
         state = "Closed Incomplete"
 
