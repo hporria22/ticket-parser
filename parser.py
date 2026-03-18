@@ -113,6 +113,8 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
         state = "In Progress"
     elif state.lower() == "resolved":
         state = "Resolved"
+    elif state.lower() == "on hold":
+        state = "Hold"
     else:
         state = "Closed Incomplete"
 
