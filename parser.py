@@ -35,7 +35,6 @@ def get_assigned_by(ticket_text):
     # Pattern: person line before Field changes + Assigned to
     pattern = r"([A-Za-z .]+)\s*\nField changes.*?\nAssigned to"
     matches = re.findall(pattern, ticket_text, flags=re.DOTALL)
-    print("DEBUG -> get_assigned_by matches:", matches)  # Debug print
     if matches:
         candidate = matches[-1].strip()  # take the last occurrence
         # Check if candidate is in Dot1 or MDM
