@@ -85,7 +85,7 @@ def extract_resolved_date(text: str):
         return dt.strftime("%m-%d-%Y")
 
     # fallback → today in mm-dd-yyyy
-    return datetime.now().strftime("%m-%d-%Y")
+    return datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%m-%d-%Y")
 
 
 def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
