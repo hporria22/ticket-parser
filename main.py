@@ -15,8 +15,7 @@ from pathlib import Path
 
 app = FastAPI()
 BASE_DIR = Path(__file__).resolve().parent
-
-templates = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 app.mount(
     "/static",
@@ -28,13 +27,12 @@ app.mount(
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
     return templates.TemplateResponse(
-    "index.html",
-    {
-        "request": request,
-       "query_options": [str(k) for k in QUERY_MAPPING.keys()]
-    },
-    
-)
+        "index.html",
+        {
+            "request": request,
+            "query_options": list(QUERY_MAPPING.keys())  # no str(), keep clean
+        }
+    )
 
 
 @app.get("/validator", response_class=HTMLResponse)
