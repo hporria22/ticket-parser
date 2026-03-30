@@ -9,12 +9,20 @@ from io import BytesIO
 import gc
 from wo_validator import process_pdf
 from fastapi.staticfiles import StaticFiles
+from pathlib import Path
 
 
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+BASE_DIR = Path(__file__).resolve().parent
+
+templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
+
+app.mount(
+    "/static",
+    StaticFiles(directory=str(BASE_DIR / "static")),
+    name="static"
+)
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -27,6 +35,7 @@ async def home(request: Request):
     },
     
 )
+
 
 @app.get("/validator", response_class=HTMLResponse)
 def validator_page(request: Request):
@@ -58,7 +67,6 @@ def process(ticket_text: str = Form(...)):
 
 @app.post("/process")
 async def process_tickets(request: Request):
-    import gc
     form = await request.form()
 
     tickets = form.getlist("tickets")
