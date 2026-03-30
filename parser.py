@@ -71,6 +71,22 @@ def detect_category(ticket_text):
 
     return "", "", ""
 
+def extract_resolved_date(text: str):
+
+    pattern = r"Field changes•([\d]{2}/[\d]{2}/[\d]{4}).*?State\s*Resolved\s*was\s*In Progress"
+
+    matches = re.findall(pattern, text, re.DOTALL)
+
+    if matches:
+        date_str = matches[-1].strip()  # e.g. 30/03/2026
+
+        # convert to mm-dd-yyyy
+        dt = datetime.strptime(date_str, "%d/%m/%Y")
+        return dt.strftime("%m-%d-%Y")
+
+    # fallback → today in mm-dd-yyyy
+    return datetime.now().strftime("%m-%d-%Y")
+
 
 def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
@@ -137,7 +153,6 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     category, query, group = detect_category(ticket_text)
     team = detect_team(assigned_to)
 
-    resolvedDate = ""
     resolvedField = ""
     tat = None
     tat_to = "" 
@@ -146,7 +161,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
     if state == "Resolved":
         resolvedField = "Resolved"
-        resolvedDate = justNow.strftime("%m-%d-%Y")
+        resolvedDate = extract_resolved_date(ticket_text)
         tat = (datetime.strptime(resolvedDate, "%m-%d-%Y") -datetime.strptime(ticket_date, "%m-%d-%Y")).days
         if team == "Dot1" :
            tat_to = '0'

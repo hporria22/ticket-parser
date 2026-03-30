@@ -6,227 +6,231 @@
     <meta charset="UTF-8">
     <title>Ticket Automation Tool</title>
     <style>
-        :root {
-            --bg-light: #f1f4f9;
-            --bg-dark: #0f172a;
-            --card-light: #ffffff;
-            --card-dark: #111827;
-            --text-light: #111827;
-            --text-dark: #ffffff;
-            --btn-light: #1e40af;
-            /* blue */
-            --btn-dark: #243a8f;
-            --btn-hover-light: #1c3a94;
-            --btn-hover-dark: #1f2f77;
-            --add-btn: #16a34a;
-            --remove-btn: #dc2626;
-            --sun-color: #facc15;
-        }
+       :root {
+    --bg-light: #0b1220;
+    --bg-dark: #0b1220;
 
-        body {
-            font-family: "Segoe UI", Arial, sans-serif;
-            margin: 0;
-            background: var(--bg-light);
-            color: var(--text-light);
-            transition: background 0.3s, color 0.3s;
-        }
+    --card-light: rgba(255,255,255,0.05);
+    --card-dark: rgba(255,255,255,0.05);
 
-        body.dark {
-            background: var(--bg-dark);
-            color: var(--text-dark);
-        }
+    --text-light: #e2e8f0;
+    --text-dark: #e2e8f0;
 
-        .header {
-            background: var(--btn-light);
-            color: white;
-            padding: 18px;
-            font-size: 22px;
-            text-align: center;
-            position: relative;
-            transition: background 0.3s;
-        }
+    --border: rgba(255,255,255,0.08);
 
-        body.dark .header {
-            background: var(--btn-dark);
-        }
+    --btn-light: #6366f1;
+    --btn-dark: #6366f1;
 
-        .container {
-            width: 1100px;
-            margin: 30px auto;
-        }
+    --btn-hover-light: #4f46e5;
+    --btn-hover-dark: #4f46e5;
 
-        .ticket-card {
-            background: var(--card-light);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
-            transition: background 0.3s, color 0.3s;
-        }
+    --add-btn: #22c55e;
+    --remove-btn: #ef4444;
+}
 
-        body.dark .ticket-card {
-            background: var(--card-dark);
-            color: var(--text-dark);
-        }
+body {
+    font-family: "Inter", "Segoe UI", Arial, sans-serif;
+    margin: 0;
+    background: radial-gradient(circle at top, #1e293b, #020617);
+    color: var(--text-light);
+}
 
-        .ticket-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
+/* HEADER */
 
-        textarea {
-            width: 100%;
-            height: 150px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            padding: 10px;
-            font-size: 14px;
-            resize: vertical;
-            background: #e5e7eb;
-            color: #111827;
-        }
+.header {
+    background: rgba(2, 6, 23, 0.7);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+    color: white;
+    padding: 18px;
+    font-size: 22px;
+    text-align: center;
+    position: relative;
+}
 
-        body.dark textarea {
-            background: #1f2937;
-            color: white;
-        }
+/* CONTAINER (UNCHANGED SIZE) */
 
-        select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            border-radius: 6px;
-            border: 1px solid #ccc;
-            margin-bottom: 10px;
-        }
+.container {
+    width: 1100px;
+    margin: 30px auto;
+}
 
-        button {
-            border: none;
-            border-radius: 6px;
-            padding: 10px 16px;
-            cursor: pointer;
-            font-size: 14px;
-        }
+/* CARD */
 
-        .add {
-            background: var(--add-btn);
-            color: white;
-        }
+.ticket-card {
+    background: var(--card-light);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
 
-        .remove {
-            background: var(--remove-btn);
-            color: white;
-        }
+    border: 1px solid var(--border);
+    backdrop-filter: blur(10px);
 
-        .generate {
-            width: 100%;
-            background: var(--btn-light);
-            color: white;
-            font-size: 16px;
-            padding: 14px;
-            margin-top: 20px;
-            transition: background 0.3s;
-        }
+    box-shadow: 0 0 0 rgba(0,0,0,0);
+    transition: 0.25s ease;
+}
 
-        body.dark .generate {
-            background: var(--btn-dark);
-        }
+.ticket-card:hover {
+    border-color: rgba(99,102,241,0.4);
+    box-shadow: 0 0 15px rgba(99,102,241,0.15);
+}
 
-        .footer-note {
-            text-align: center;
-            margin-top: 15px;
-            color: #666;
-            font-size: 13px;
-        }
+/* TITLE */
 
-        /* Theme toggle button */
-        /* .theme-toggle {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--sun-color);
-        }
+.ticket-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: #c7d2fe;
+}
 
-        body.dark .theme-toggle {
-            background: #111827;
-            color: var(--sun-color);
-        } */
+/* TEXTAREA (SIZE SAME) */
 
-        /* Compact page dropdown */
-        .page-dropdown {
-            display: inline-block;
-            position: absolute;
-            right: 60px;
-            top: 14px;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 3px;
-        }
+textarea {
+    width: 100%;
+    height: 150px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    padding: 10px;
+    font-size: 14px;
+    resize: vertical;
 
-        .page-dropdown .arrow {
-            display: inline-block;
-            transition: transform 0.2s;
-        }
+    background: rgba(0,0,0,0.35);
+    color: white;
 
-        .page-dropdown:hover .arrow {
-            transform: rotate(90deg);
-        }
+    transition: 0.2s;
+}
 
-        .page-dropdown .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 20px;
-            background-color: white;
-            min-width: 180px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            z-index: 1000;
-        }
+textarea:focus {
+    outline: none;
+    border-color: var(--btn-light);
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+}
 
-        .page-dropdown:hover .dropdown-content {
-            display: block;
-        }
+/* SELECT + INPUT (SIZE SAME) */
 
-        .page-dropdown .dropdown-content a {
-            color: #111827;
-            padding: 8px 12px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-        }
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    margin-bottom: 10px;
 
-        .page-dropdown .dropdown-content a:hover {
-            background-color: #f1f4f9;
-        }
+    background: rgba(0,0,0,0.35);
+    color: white;
+}
 
-        body.dark .page-dropdown .dropdown-content {
-            background-color: #111827;
-        }
+input {
+    background: rgba(0,0,0,0.35);
+    color: white;
+    border: 1px solid var(--border);
+}
 
-        body.dark .page-dropdown .dropdown-content a {
-            color: white;
-        }
+select:focus,
+input:focus {
+    outline: none;
+    border-color: var(--btn-light);
+    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+}
 
-        body.dark .page-dropdown .dropdown-content a:hover {
-            background-color: #1f2937;
-        }
+/* BUTTONS (SIZE SAME) */
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.add {
+    background: var(--add-btn);
+    color: white;
+}
+
+.add:hover {
+    background: #16a34a;
+    transform: translateY(-1px);
+}
+
+.remove {
+    background: var(--remove-btn);
+    color: white;
+}
+
+.remove:hover {
+    background: #dc2626;
+    transform: translateY(-1px);
+}
+
+.generate {
+    width: 100%;
+    background: var(--btn-light);
+    color: white;
+    font-size: 16px;
+    padding: 14px;
+    margin-top: 20px;
+}
+
+.generate:hover {
+    background: var(--btn-hover-light);
+    box-shadow: 0 0 20px rgba(99,102,241,0.3);
+}
+
+/* FOOTER */
+
+.footer-note {
+    text-align: center;
+    margin-top: 15px;
+    color: #94a3b8;
+    font-size: 13px;
+}
+
+/* DROPDOWN (UNCHANGED STRUCTURE) */
+
+.page-dropdown {
+    display: inline-block;
+    position: absolute;
+    right: 60px;
+    top: 14px;
+    cursor: pointer;
+    font-size: 18px;
+}
+
+.page-dropdown .dropdown-content {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: 20px;
+    background-color: #020617;
+    border: 1px solid var(--border);
+    min-width: 180px;
+    border-radius: 6px;
+}
+
+.page-dropdown:hover .dropdown-content {
+    display: block;
+}
+
+.page-dropdown .dropdown-content a {
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    display: block;
+    font-size: 14px;
+}
+
+.page-dropdown .dropdown-content a:hover {
+    background-color: rgba(255,255,255,0.08);
+}
     </style>
 </head>
 
 <body>
     <div class="header">
-        ServiceNow Ticket Excel Automation
+        Automation 2.O
 
         <!-- Compact Page Dropdown -->
         <div class="page-dropdown">
@@ -286,7 +290,7 @@
         </script>
 
         <div class="footer-note">
-            Paste one ticket per box and click Generate Excel
+           
         </div>
     </div>
 
