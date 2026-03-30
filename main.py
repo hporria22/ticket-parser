@@ -4,10 +4,12 @@ from fastapi.templating import Jinja2Templates
 from parser import extract_tickets, parse_ticket
 from config import QUERY_MAPPING
 import pandas as pd
-from io import BytesIO
 import io
+from io import BytesIO
+import gc
 from wo_validator import process_pdf
 from fastapi.staticfiles import StaticFiles
+
 
 
 app = FastAPI()
@@ -17,19 +19,29 @@ templates = Jinja2Templates(directory="templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    return templates.TemplateResponse("index.html", {
+    return templates.TemplateResponse(
+    "index.html",
+    {
         "request": request,
         "query_options": list(QUERY_MAPPING.keys())
-    })
+    },
+    
+)
 
 @app.get("/validator", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("validator.html", {"request": request})
+def validator_page(request: Request):
+    return templates.TemplateResponse(
+        "validator.html",
+        {"request": request}
+    )
 
 
 @app.get("/extractor", response_class=HTMLResponse)
-def home(request: Request):
-    return templates.TemplateResponse("extractorPage.html", {"request": request})
+def extractor_page(request: Request):
+    return templates.TemplateResponse(
+        "extractorPage.html",
+        {"request": request}
+    )
 
 
 @app.post("/processTickets")
@@ -46,19 +58,28 @@ def process(ticket_text: str = Form(...)):
 
 @app.post("/process")
 async def process_tickets(request: Request):
+    import gc
     form = await request.form()
-    tickets = form.getlist("tickets")  # multiple ticket texts
 
+    tickets = form.getlist("tickets")
     assigned_by_global = form.get("assigned_by")
+
+    # 🔒 SAFETY LIMIT (prevents OOM)
+    if len(tickets) > 200:
+        return {"error": "Too many tickets. Max limit is 200."}
 
     processed_tickets = []
 
     for i, ticket_text in enumerate(tickets, start=1):
-        
+
         ticket_specific_field = f"assigned_by_ticket_{i}"
         assigned_by_ticket = form.get(ticket_specific_field)
-        ticket_data = parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket)
 
+        ticket_data = parse_ticket(
+            ticket_text,
+            assigned_by_global,
+            assigned_by_ticket
+        )
 
         # user-selected query
         query_field_name = f"query_related_{i}"
@@ -68,20 +89,30 @@ async def process_tickets(request: Request):
             ticket_data["Query related to"] = user_query
             ticket_data["Ticket Bucket Group"] = QUERY_MAPPING.get(
                 user_query, {}
-            ).get("group", ticket_data["Ticket Bucket Group"])
+            ).get("group", ticket_data.get("Ticket Bucket Group", ""))
 
         processed_tickets.append(ticket_data)
 
     # Convert to Excel
-    df = pd.DataFrame(processed_tickets)
     output = BytesIO()
+
+    df = pd.DataFrame(processed_tickets)
     df.to_excel(output, index=False, engine="openpyxl")
     output.seek(0)
+
+    # 🔥 MEMORY CLEANUP (CRITICAL)
+    del df
+    del processed_tickets
+    del form
+    del tickets
+    gc.collect()
 
     return StreamingResponse(
         output,
         media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        headers={"Content-Disposition": "attachment; filename=tickets.xlsx"}
+        headers={
+            "Content-Disposition": "attachment; filename=tickets.xlsx"
+        }
     )
 
 

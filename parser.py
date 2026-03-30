@@ -139,9 +139,9 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     team = detect_team(assigned_to)
 
     resolvedDate = ""
-    tat = ""
-    tat_to = "" 
     resolvedField = ""
+    tat = None
+    tat_to = "" 
 
     justNow = datetime.now(ZoneInfo("Asia/Kolkata"))
 
@@ -182,7 +182,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
         "Remarks": "",
         "Resolved": resolvedField or "",
         "Resolved date":resolvedDate or "",
-        "TAT": tat,
+        "TAT": tat or None,
         "TAT to Dot1/MDM":tat_to or ""
     }
 
