@@ -153,6 +153,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     category, query, group = detect_category(ticket_text)
     team = detect_team(assigned_to)
 
+    resolvedDate= ""
     resolvedField = ""
     tat = None
     tat_to = "" 
@@ -194,10 +195,10 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
         "Query related to": query,
         "Ticket Bucket Group": group,
         "Remarks": "",
-        "Resolved": resolvedField or "",
-        "Resolved date":resolvedDate or "",
+        "Resolved": resolvedField or None,
+        "Resolved date":resolvedDate or None,
         "TAT": tat or None,
-        "TAT to Dot1/MDM":tat_to or ""
+        "TAT to Dot1/MDM":tat_to or None
     }
 
 
