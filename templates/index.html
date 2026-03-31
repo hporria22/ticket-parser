@@ -6,41 +6,33 @@
     <meta charset="UTF-8">
     <title>Ticket Automation Tool</title>
     <style>
-       :root {
-    --bg-light: #0b1220;
-    --bg-dark: #0b1220;
+    :root {
+    --bg-light: #ffffff;
+    --card-light: #ffffff;
 
-    --card-light: rgba(255,255,255,0.05);
-    --card-dark: rgba(255,255,255,0.05);
+    --text-light: #0f172a;
+    --border: #e5e7eb;
 
-    --text-light: #e2e8f0;
-    --text-dark: #e2e8f0;
+    --btn-light: #2563eb;
+    --btn-hover-light: #1d4ed8;
 
-    --border: rgba(255,255,255,0.08);
-
-    --btn-light: #6366f1;
-    --btn-dark: #6366f1;
-
-    --btn-hover-light: #4f46e5;
-    --btn-hover-dark: #4f46e5;
-
-    --add-btn: #22c55e;
-    --remove-btn: #ef4444;
+    --add-btn: #16a34a;
+    --remove-btn: #dc2626;
 }
+
+/* BODY */
 
 body {
     font-family: "Inter", "Segoe UI", Arial, sans-serif;
     margin: 0;
-    background: radial-gradient(circle at top, #1e293b, #020617);
+    background: #f8fafc;
     color: var(--text-light);
 }
 
-/* HEADER */
+/* HEADER (BLUE BAR) */
 
 .header {
-    background: rgba(2, 6, 23, 0.7);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
+    background: #2563eb;
     color: white;
     padding: 18px;
     font-size: 22px;
@@ -48,7 +40,68 @@ body {
     position: relative;
 }
 
-/* CONTAINER (UNCHANGED SIZE) */
+/* DROPDOWN RIGHT */
+
+.page-dropdown {
+            display: inline-block;
+            position: absolute;
+            right: 60px;
+            top: 14px;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 3px;
+        }
+
+        .page-dropdown .arrow {
+            display: inline-block;
+            transition: transform 0.2s;
+        }
+
+        .page-dropdown:hover .arrow {
+            transform: rotate(90deg);
+        }
+
+        .page-dropdown .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 20px;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 6px;
+            z-index: 1000;
+        }
+
+        .page-dropdown:hover .dropdown-content {
+            display: block;
+        }
+
+        .page-dropdown .dropdown-content a {
+            color: #111827;
+            padding: 8px 12px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+        }
+
+        .page-dropdown .dropdown-content a:hover {
+            background-color: #f1f4f9;
+        }
+
+        body.dark .page-dropdown .dropdown-content {
+            background-color: #111827;
+        }
+
+        body.dark .page-dropdown .dropdown-content a {
+            color: white;
+        }
+
+        body.dark .page-dropdown .dropdown-content a:hover {
+            background-color: #1f2937;
+        }
+
+/* CONTAINER */
 
 .container {
     width: 1100px;
@@ -64,15 +117,14 @@ body {
     margin-bottom: 20px;
 
     border: 1px solid var(--border);
-    backdrop-filter: blur(10px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
 
-    box-shadow: 0 0 0 rgba(0,0,0,0);
     transition: 0.25s ease;
 }
 
 .ticket-card:hover {
-    border-color: rgba(99,102,241,0.4);
-    box-shadow: 0 0 15px rgba(99,102,241,0.15);
+    border-color: rgba(37,99,235,0.4);
+    box-shadow: 0 6px 18px rgba(37,99,235,0.1);
 }
 
 /* TITLE */
@@ -81,10 +133,10 @@ body {
     font-size: 16px;
     font-weight: 600;
     margin-bottom: 10px;
-    color: #c7d2fe;
+    color: #1e3a8a;
 }
 
-/* TEXTAREA (SIZE SAME) */
+/* TEXTAREA */
 
 textarea {
     width: 100%;
@@ -95,8 +147,8 @@ textarea {
     font-size: 14px;
     resize: vertical;
 
-    background: rgba(0,0,0,0.35);
-    color: white;
+    background: #ffffff;
+    color: #111827;
 
     transition: 0.2s;
 }
@@ -104,10 +156,10 @@ textarea {
 textarea:focus {
     outline: none;
     border-color: var(--btn-light);
-    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
 }
 
-/* SELECT + INPUT (SIZE SAME) */
+/* SELECT + INPUT */
 
 select {
     width: 100%;
@@ -117,13 +169,13 @@ select {
     border: 1px solid var(--border);
     margin-bottom: 10px;
 
-    background: rgba(0,0,0,0.35);
-    color: white;
+    background: #ffffff;
+    color: #111827;
 }
 
 input {
-    background: rgba(0,0,0,0.35);
-    color: white;
+    background: #ffffff;
+    color: #111827;
     border: 1px solid var(--border);
 }
 
@@ -131,10 +183,10 @@ select:focus,
 input:focus {
     outline: none;
     border-color: var(--btn-light);
-    box-shadow: 0 0 0 2px rgba(99,102,241,0.3);
+    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
 }
 
-/* BUTTONS (SIZE SAME) */
+/* BUTTONS */
 
 button {
     border: none;
@@ -151,7 +203,7 @@ button {
 }
 
 .add:hover {
-    background: #16a34a;
+    background: #15803d;
     transform: translateY(-1px);
 }
 
@@ -161,7 +213,7 @@ button {
 }
 
 .remove:hover {
-    background: #dc2626;
+    background: #b91c1c;
     transform: translateY(-1px);
 }
 
@@ -176,7 +228,7 @@ button {
 
 .generate:hover {
     background: var(--btn-hover-light);
-    box-shadow: 0 0 20px rgba(99,102,241,0.3);
+    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
 }
 
 /* FOOTER */
@@ -184,46 +236,8 @@ button {
 .footer-note {
     text-align: center;
     margin-top: 15px;
-    color: #94a3b8;
+    color: #6b7280;
     font-size: 13px;
-}
-
-/* DROPDOWN (UNCHANGED STRUCTURE) */
-
-.page-dropdown {
-    display: inline-block;
-    position: absolute;
-    right: 60px;
-    top: 14px;
-    cursor: pointer;
-    font-size: 18px;
-}
-
-.page-dropdown .dropdown-content {
-    display: none;
-    position: absolute;
-    right: 0;
-    top: 20px;
-    background-color: #020617;
-    border: 1px solid var(--border);
-    min-width: 180px;
-    border-radius: 6px;
-}
-
-.page-dropdown:hover .dropdown-content {
-    display: block;
-}
-
-.page-dropdown .dropdown-content a {
-    color: white;
-    padding: 8px 12px;
-    text-decoration: none;
-    display: block;
-    font-size: 14px;
-}
-
-.page-dropdown .dropdown-content a:hover {
-    background-color: rgba(255,255,255,0.08);
 }
     </style>
 </head>
