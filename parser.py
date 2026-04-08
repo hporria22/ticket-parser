@@ -60,14 +60,14 @@ def detect_team(assigned_to):
 
 def detect_category(ticket_text):
 
-    for category in SUBCATEGORY_MAPPING:
+    subcategory = extract(r"Subcategory\s*\n\s*([^\n]+)", ticket_text)
 
-        if category.lower() in ticket_text.lower():
-
-            query = SUBCATEGORY_MAPPING[category]["query"]
-            group = SUBCATEGORY_MAPPING[category]["group"]
-
-            return category, query, group
+    if subcategory:
+        for category in SUBCATEGORY_MAPPING:
+            if subcategory.strip().lower() == category.lower():
+                query = SUBCATEGORY_MAPPING[category]["query"]
+                group = SUBCATEGORY_MAPPING[category]["group"]
+                return category, query, group
 
     return "", "", ""
 
@@ -92,7 +92,7 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
     ticket_number = extract(r"(RITM\d+|INC\d+)", ticket_text)
 
-    opened = extract(r"Opened\s+([0-9/]+\s+[0-9:]+\s+[APM]+)", ticket_text)
+    opened = extract(r"Opened\s+([0-9/]+\s+[0-9:]+\s+[AP]M+)", ticket_text)
 
     ticket_date = ""
     ticket_time = ""
@@ -100,11 +100,12 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     if opened:
        parts = opened.split()
        if len(parts) >= 3:
-        dt = datetime.strptime(f"{parts[0]} {parts[1]} {parts[2]}", "%d/%m/%Y %H:%M:%S %p")
-        ticket_date = dt.strftime("%m-%d-%Y")
-        ticket_time = dt.strftime("%I:%M:%S %p")
+        if opened:
+          dt = datetime.strptime(opened, "%d/%m/%Y %I:%M:%S %p")
+          ticket_date = dt.strftime("%m-%d-%Y")
+          ticket_time = dt.strftime("%I:%M:%S %p")
 
-    action = extract(r"([0-9/]+\s+[0-9:]+\s+[APM]+)\s+Assigned", ticket_text)
+    action = extract(r"([0-9/]+\s+[0-9:]+\s+[AP]M+)\s+Assigned", ticket_text)
 
     processed_date = ""
     action_time = ""
@@ -112,9 +113,10 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     if action:
         parts = action.split()
         if len(parts) >= 3:
-         dt = datetime.strptime(f"{parts[0]} {parts[1]} {parts[2]}", "%d/%m/%Y %H:%M:%S %p")
-         processed_date = dt.strftime("%m-%d-%Y")
-         action_time = dt.strftime("%I:%M:%S %p")
+         if action:
+           dt = datetime.strptime(action, "%d/%m/%Y %I:%M:%S %p")
+           processed_date = dt.strftime("%m-%d-%Y")
+           action_time = dt.strftime("%I:%M:%S %p")
 
 # If still empty
     if not processed_date or not action_time: 

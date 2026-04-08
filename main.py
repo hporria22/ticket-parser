@@ -66,7 +66,6 @@ def process(ticket_text: str = Form(...)):
 @app.post("/process")
 async def process_tickets(request: Request):
     form = await request.form()
-
     tickets = form.getlist("tickets")
     assigned_by_global = form.get("assigned_by")
 
