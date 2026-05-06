@@ -2,6 +2,7 @@ from datetime import datetime
 import re
 from zoneinfo import ZoneInfo
 
+from difflib import get_close_matches
 import pandas as pd
 import io
 from config import TEAM_MAPPING, SUBCATEGORY_MAPPING
@@ -15,6 +16,24 @@ def extract(pattern, text):
         return match.group(1).strip()
 
     return ""
+
+
+def remove_error_before_subcategory(text: str) -> str:
+    """
+    Removes error message block that ends with 'Actual Subcategory'
+    without affecting the rest of the ticket.
+    """
+
+    pattern = r"Error Message.*?Actual Subcategory\s*"
+
+    cleaned_text = re.sub(
+        pattern,
+        "",
+        text,
+        flags=re.IGNORECASE | re.DOTALL
+    )
+
+    return cleaned_text.strip()
 
 
 def normalize_name(name):
@@ -58,18 +77,40 @@ def detect_team(assigned_to):
     return ""
 
 
+
+def normalize(text):
+    return " ".join(text.strip().lower().split())
+
 def detect_category(ticket_text):
 
-    subcategory = extract(r"Subcategory\s*\n\s*([^\n]+)", ticket_text)
+    subcategory = extract(r"Subcategory\s*[:\-]?\s*(.+)", ticket_text)
 
-    if subcategory:
+    if not subcategory:
+        return "", "", ""
+
+    sub_clean = normalize(subcategory)
+
+    # Exact match
+    for category in SUBCATEGORY_MAPPING:
+        if sub_clean == normalize(category):
+            data = SUBCATEGORY_MAPPING[category]
+            return category, data["query"], data["group"]
+
+    # Fuzzy match fallback
+    keys = [normalize(k) for k in SUBCATEGORY_MAPPING.keys()]
+    match = get_close_matches(sub_clean, keys, n=1, cutoff=0.6)
+
+    if match:
+        matched_key = match[0]
+
+        # Get original key
         for category in SUBCATEGORY_MAPPING:
-            if subcategory.strip().lower() == category.lower():
-                query = SUBCATEGORY_MAPPING[category]["query"]
-                group = SUBCATEGORY_MAPPING[category]["group"]
-                return category, query, group
+            if normalize(category) == matched_key:
+                data = SUBCATEGORY_MAPPING[category]
+                return category, data["query"], data["group"]
 
     return "", "", ""
+
 
 def extract_resolved_date(text: str):
 
