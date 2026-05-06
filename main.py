@@ -1,7 +1,7 @@
 from fastapi import FastAPI, File, Request, Form, UploadFile
 from fastapi.responses import HTMLResponse, StreamingResponse
 from fastapi.templating import Jinja2Templates
-from parser import extract_tickets, parse_ticket
+from parser import extract_tickets, parse_ticket, remove_error_before_subcategory
 from config import QUERY_MAPPING
 import pandas as pd
 import io
@@ -76,6 +76,8 @@ async def process_tickets(request: Request):
     processed_tickets = []
 
     for i, ticket_text in enumerate(tickets, start=1):
+
+        ticket_text = remove_error_before_subcategory(ticket_text)
 
         ticket_specific_field = f"assigned_by_ticket_{i}"
         assigned_by_ticket = form.get(ticket_specific_field)
