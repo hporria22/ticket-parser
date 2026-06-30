@@ -9,7 +9,9 @@ TEAM_MAPPING = {
         "Abhishek",
         "Pawan",
         "Ajay",
-        "Ravindra"
+        "Ravindra",
+        "Prasad",
+        "Thurani"   
     ],
 
     "MDM": [
