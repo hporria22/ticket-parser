@@ -4,241 +4,414 @@
 <head>
     <link rel="icon" type="image/png" href="/static/favicon.ico">
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ticket Automation Tool</title>
     <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
     :root {
-    --bg-light: #ffffff;
-    --card-light: #ffffff;
+        --bg: #f4f6fa;
+        --card: #ffffff;
+        --text: #1a2233;
+        --text-muted: #6b7385;
+        --border: #e6e9f0;
+        --border-strong: #d7dce6;
 
-    --text-light: #0f172a;
-    --border: #e5e7eb;
+        --accent: #3454d1;
+        --accent-hover: #2a45b8;
+        --accent-soft: rgba(52, 84, 209, 0.08);
 
-    --btn-light: #2563eb;
-    --btn-hover-light: #1d4ed8;
+        --add-btn: #1a9e6d;
+        --add-hover: #157d57;
+        --remove-btn: #e6493f;
+        --remove-hover: #cc3a30;
 
-    --add-btn: #16a34a;
-    --remove-btn: #dc2626;
-}
+        --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.04);
+        --shadow-md: 0 4px 16px rgba(16, 24, 40, 0.06);
+        --shadow-lg: 0 12px 32px rgba(16, 24, 40, 0.10);
+    }
 
-/* BODY */
+    * { box-sizing: border-box; }
 
-body {
-    font-family: "Inter", "Segoe UI", Arial, sans-serif;
-    margin: 0;
-    background: #f8fafc;
-    color: var(--text-light);
-}
+    body {
+        font-family: "Inter", "Segoe UI", Arial, sans-serif;
+        margin: 0;
+        background:
+            radial-gradient(1000px 400px at 50% -80px, rgba(52,84,209,0.06), transparent),
+            var(--bg);
+        color: var(--text);
+        -webkit-font-smoothing: antialiased;
+    }
 
-/* HEADER (BLUE BAR) */
+    /* HEADER */
 
-.header {
-    background: #2563eb;
-    color: white;
-    padding: 18px;
-    font-size: 22px;
-    text-align: center;
-    position: relative;
-}
+    .header {
+        background: linear-gradient(135deg, #2f47b8, #3454d1 55%, #4a63e0);
+        color: white;
+        padding: 22px 24px;
+        font-size: 20px;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        text-align: center;
+        position: relative;
+        box-shadow: 0 2px 12px rgba(52, 84, 209, 0.25);
+    }
 
-/* DROPDOWN RIGHT */
+    .header::after {
+        content: "";
+        position: absolute;
+        left: 0; right: 0; bottom: -1px;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent);
+    }
 
-.page-dropdown {
-            display: inline-block;
-            position: absolute;
-            right: 60px;
-            top: 14px;
-            cursor: pointer;
-            font-size: 18px;
-            padding: 3px;
-        }
+    /* DROPDOWN RIGHT */
 
-        .page-dropdown .arrow {
-            display: inline-block;
-            transition: transform 0.2s;
-        }
+    .page-dropdown {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        position: absolute;
+        right: 24px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 8px 12px;
+        border-radius: 8px;
+        background: rgba(255, 255, 255, 0.12);
+        transition: background 0.2s ease;
+    }
 
-        .page-dropdown:hover .arrow {
-            transform: rotate(90deg);
-        }
+    .page-dropdown:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
 
-        .page-dropdown .dropdown-content {
-            display: none;
-            position: absolute;
-            right: 0;
-            top: 20px;
-            background-color: white;
-            min-width: 180px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            z-index: 1000;
-        }
+    .page-dropdown .arrow {
+        display: inline-block;
+        font-size: 11px;
+        transition: transform 0.2s;
+    }
 
-        .page-dropdown:hover .dropdown-content {
-            display: block;
-        }
+    .page-dropdown:hover .arrow {
+        transform: rotate(90deg);
+    }
 
-        .page-dropdown .dropdown-content a {
-            color: #111827;
-            padding: 8px 12px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-        }
+    .page-dropdown .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 8px);
+        background-color: white;
+        min-width: 190px;
+        box-shadow: var(--shadow-lg);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        z-index: 1000;
+        overflow: hidden;
+        padding: 6px;
+    }
 
-        .page-dropdown .dropdown-content a:hover {
-            background-color: #f1f4f9;
-        }
+    .page-dropdown:hover .dropdown-content {
+        display: block;
+    }
 
-        body.dark .page-dropdown .dropdown-content {
-            background-color: #111827;
-        }
+    .page-dropdown .dropdown-content a {
+        color: var(--text);
+        padding: 9px 12px;
+        text-decoration: none;
+        display: block;
+        font-size: 13.5px;
+        font-weight: 500;
+        border-radius: 6px;
+        transition: background 0.15s ease;
+    }
 
-        body.dark .page-dropdown .dropdown-content a {
-            color: white;
-        }
+    .page-dropdown .dropdown-content a:hover {
+        background-color: var(--accent-soft);
+        color: var(--accent);
+    }
 
-        body.dark .page-dropdown .dropdown-content a:hover {
-            background-color: #1f2937;
-        }
+    /* CONTAINER */
 
-/* CONTAINER */
+    .container {
+        width: 100%;
+        max-width: 880px;
+        margin: 0 auto;
+        padding: 36px 20px 140px;
+    }
 
-.container {
-    width: 1100px;
-    margin: 30px auto;
-}
+    .page-title {
+        font-size: 13px;
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        margin: 0 0 4px 2px;
+    }
 
-/* CARD */
+    .page-subtitle {
+        font-size: 22px;
+        font-weight: 700;
+        color: var(--text);
+        margin: 0 0 24px 2px;
+    }
 
-.ticket-card {
-    background: var(--card-light);
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
+    /* ASSIGNED BY TOOLBAR */
 
-    border: 1px solid var(--border);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+    .toolbar {
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 14px 18px;
+        margin-bottom: 22px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        box-shadow: var(--shadow-sm);
+    }
 
-    transition: 0.25s ease;
-}
+    .toolbar label {
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--text);
+        white-space: nowrap;
+    }
 
-.ticket-card:hover {
-    border-color: rgba(37,99,235,0.4);
-    box-shadow: 0 6px 18px rgba(37,99,235,0.1);
-}
+    .toolbar input {
+        width: 220px;
+        max-width: 100%;
+    }
 
-/* TITLE */
+    /* CARD */
 
-.ticket-title {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 10px;
-    color: #1e3a8a;
-}
+    .ticket-card {
+        background: var(--card);
+        border-radius: 14px;
+        padding: 22px 22px 20px;
+        margin-bottom: 18px;
 
-/* TEXTAREA */
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow-sm);
 
-textarea {
-    width: 100%;
-    height: 150px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    padding: 10px;
-    font-size: 14px;
-    resize: vertical;
+        transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        opacity: 0;
+        transform: translateY(8px);
+        animation: cardIn 0.35s ease forwards;
+    }
 
-    background: #ffffff;
-    color: #111827;
+    @keyframes cardIn {
+        to { opacity: 1; transform: translateY(0); }
+    }
 
-    transition: 0.2s;
-}
+    .ticket-card.removing {
+        animation: cardOut 0.22s ease forwards;
+    }
 
-textarea:focus {
-    outline: none;
-    border-color: var(--btn-light);
-    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
-}
+    @keyframes cardOut {
+        to { opacity: 0; transform: translateY(-6px) scale(0.98); margin-bottom: 0; padding-top: 0; padding-bottom: 0; max-height: 0; }
+    }
 
-/* SELECT + INPUT */
+    .ticket-card:hover {
+        border-color: rgba(52, 84, 209, 0.35);
+        box-shadow: var(--shadow-md);
+    }
 
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border-radius: 6px;
-    border: 1px solid var(--border);
-    margin-bottom: 10px;
+    /* TITLE ROW */
 
-    background: #ffffff;
-    color: #111827;
-}
+    .ticket-title-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 14px;
+    }
 
-input {
-    background: #ffffff;
-    color: #111827;
-    border: 1px solid var(--border);
-}
+    .ticket-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        border-radius: 8px;
+        background: var(--accent-soft);
+        color: var(--accent);
+        font-size: 12.5px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
 
-select:focus,
-input:focus {
-    outline: none;
-    border-color: var(--btn-light);
-    box-shadow: 0 0 0 2px rgba(37,99,235,0.2);
-}
+    .ticket-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text);
+        letter-spacing: 0.01em;
+    }
 
-/* BUTTONS */
+    .field-label {
+        display: block;
+        font-size: 12.5px;
+        font-weight: 600;
+        color: var(--text-muted);
+        margin: 14px 0 6px 2px;
+    }
 
-button {
-    border: none;
-    border-radius: 6px;
-    padding: 10px 16px;
-    cursor: pointer;
-    font-size: 14px;
-    transition: 0.2s;
-}
+    /* TEXTAREA */
 
-.add {
-    background: var(--add-btn);
-    color: white;
-}
+    textarea {
+        width: 100%;
+        height: 140px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
+        padding: 12px 14px;
+        font-size: 14px;
+        line-height: 1.5;
+        font-family: inherit;
+        resize: vertical;
 
-.add:hover {
-    background: #15803d;
-    transform: translateY(-1px);
-}
+        background: #fbfcfe;
+        color: var(--text);
 
-.remove {
-    background: var(--remove-btn);
-    color: white;
-}
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
 
-.remove:hover {
-    background: #b91c1c;
-    transform: translateY(-1px);
-}
+    textarea::placeholder,
+    input::placeholder {
+        color: #9aa1b2;
+    }
 
-.generate {
-    width: 100%;
-    background: var(--btn-light);
-    color: white;
-    font-size: 16px;
-    padding: 14px;
-    margin-top: 20px;
-}
+    textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(52, 84, 209, 0.12);
+    }
 
-.generate:hover {
-    background: var(--btn-hover-light);
-    box-shadow: 0 4px 12px rgba(37,99,235,0.25);
-}
+    /* SELECT + INPUT */
 
-/* FOOTER */
+    select {
+        width: 100%;
+        padding: 9px 12px;
+        border-radius: 8px;
+        border: 1px solid var(--border);
 
-.footer-note {
-    text-align: center;
-    margin-top: 15px;
-    color: #6b7280;
-    font-size: 13px;
-}
+        background: #fbfcfe;
+        color: var(--text);
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    input {
+        padding: 9px 12px;
+        border-radius: 8px;
+        background: #fbfcfe;
+        color: var(--text);
+        border: 1px solid var(--border);
+        font-size: 14px;
+        font-family: inherit;
+        transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    }
+
+    select:focus,
+    input:focus {
+        outline: none;
+        border-color: var(--accent);
+        background: #ffffff;
+        box-shadow: 0 0 0 3px rgba(52, 84, 209, 0.12);
+    }
+
+    /* BUTTONS */
+
+    button {
+        border: none;
+        border-radius: 9px;
+        padding: 10px 18px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        font-family: inherit;
+        transition: background 0.18s ease, box-shadow 0.18s ease, transform 0.08s ease;
+    }
+
+    button:active {
+        transform: scale(0.97);
+    }
+
+    .actions {
+        margin-top: 14px;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .remove {
+        background: rgba(230, 73, 63, 0.1);
+        color: var(--remove-btn);
+        padding: 8px 14px;
+        font-size: 13px;
+    }
+
+    .remove:hover {
+        background: var(--remove-btn);
+        color: white;
+    }
+
+    /* STICKY ACTION BAR — keeps Add/Generate in a fixed spot so growing
+       ticket list never shifts them out from under the cursor */
+
+    .sticky-actions {
+        position: sticky;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        margin-top: 26px;
+        padding: 16px;
+        background: rgba(244, 246, 250, 0.85);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-top: 1px solid var(--border-strong);
+        border-radius: 14px 14px 0 0;
+        display: flex;
+        gap: 12px;
+        box-shadow: 0 -8px 24px rgba(16, 24, 40, 0.06);
+    }
+
+    .add {
+        background: var(--add-btn);
+        color: white;
+        padding: 13px 20px;
+        flex-shrink: 0;
+        white-space: nowrap;
+        box-shadow: 0 2px 8px rgba(26, 158, 109, 0.25);
+    }
+
+    .add:hover {
+        background: var(--add-hover);
+        box-shadow: 0 4px 14px rgba(26, 158, 109, 0.35);
+    }
+
+    .generate {
+        flex: 1;
+        background: var(--accent);
+        color: white;
+        font-size: 15px;
+        padding: 13px 20px;
+        box-shadow: 0 2px 8px rgba(52, 84, 209, 0.25);
+    }
+
+    .generate:hover {
+        background: var(--accent-hover);
+        box-shadow: 0 4px 14px rgba(52, 84, 209, 0.35);
+    }
+
+    /* FOOTER */
+
+    .footer-note {
+        text-align: center;
+        margin-top: 6px;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
     </style>
 </head>
 
@@ -262,25 +435,35 @@ button {
     </div>
 
     <div class="container">
-        <form action="/process" method="post">
-            <label>Assigned by:</label>
-            <input type="text" name="assigned_by" list="assignedByList"
-                style="width:10%; padding:8px; margin-bottom:15px;">
+        <div class="page-title">Ticket Automation</div>
+        <div class="page-subtitle">Generate your report</div>
+
+        <form action="/process" method="post" id="ticketForm">
+            <div class="toolbar">
+                <label>Assigned by</label>
+                <input type="text" name="assigned_by" list="assignedByList" placeholder="Select or type a name">
+            </div>
+
             <div id="tickets">
                 <div class="ticket-card">
-                    <div class="ticket-title">Ticket 1</div>
+                    <div class="ticket-title-row">
+                        <span class="ticket-badge">1</span>
+                        <span class="ticket-title">Ticket 1</span>
+                    </div>
                     <textarea name="tickets" placeholder="Paste complete ServiceNow ticket text here"></textarea>
-                    <label for="query_related_1">Query related to:</label>
-                    <select name="query_related_1"></select>
-                    <label>Assigned by(if different)</label>
-                 <input type="text" name="assigned_by_ticket_1" list="assignedByList" >
+                    <!-- <label class="field-label" for="query_related_1">Query related to</label>
+                    <select name="query_related_1" id="query_related_1"></select> -->
+                    <label class="field-label">Assigned by (if different)</label>
+                    <input type="text" name="assigned_by_ticket_1" list="assignedByList" placeholder="Optional">
                 </div>
             </div>
-            <div class="actions">
+
+            <div class="sticky-actions">
                 <button type="button" class="add" onclick="addTicket()">+ Add Another Ticket</button>
+                <button type="submit" class="generate">Generate Excel</button>
             </div>
-            <button class="generate">Generate Excel</button>
         </form>
+
         <datalist id="assignedByList">
             <option value="Kashish">
             <option value="Ashish">
@@ -306,7 +489,7 @@ button {
         </script>
 
         <div class="footer-note">
-           
+
         </div>
     </div>
 
@@ -322,18 +505,21 @@ button {
             card.className = "ticket-card";
 
             card.innerHTML = `
-            <div class="ticket-title">Ticket ${ticketCount}</div>
-            
+            <div class="ticket-title-row">
+                <span class="ticket-badge">${ticketCount}</span>
+                <span class="ticket-title">Ticket ${ticketCount}</span>
+            </div>
+
             <textarea name="tickets" placeholder="Paste complete ServiceNow ticket text here"></textarea>
-            
-            <label>Query related to:</label>
+
+            <label class="field-label">Query related to</label>
             <select name="query_related_${ticketCount}">
             <option value="">-- default --</option>
             </select>
-            
-            <label>Assigned by(if different)</label>
-            <input type="text" name="assigned_by_ticket_${ticketCount}" list="assignedByList" >
-            
+
+            <label class="field-label">Assigned by (if different)</label>
+            <input type="text" name="assigned_by_ticket_${ticketCount}" list="assignedByList" placeholder="Optional">
+
             <div class="actions">
             <button type="button" class="remove" onclick="removeTicket(this)">Remove</button>
             </div>
@@ -343,12 +529,19 @@ button {
 
             const selectElem = card.querySelector("select");
             populateDropdown(selectElem);
+
+            // Bring the new card into view smoothly so its position never
+            // catches the user off guard mid-click.
+            card.scrollIntoView({ behavior: "smooth", block: "center" });
         }
 
         function removeTicket(btn) {
-            btn.closest(".ticket-card").remove();
-            updateTicketNumbers();
-
+            const card = btn.closest(".ticket-card");
+            card.classList.add("removing");
+            card.addEventListener("animationend", () => {
+                card.remove();
+                updateTicketNumbers();
+            }, { once: true });
         }
 
         function updateTicketNumbers() {
@@ -358,8 +551,10 @@ button {
             cards.forEach((card, index) => {
 
                 const title = card.querySelector(".ticket-title");
+                const badge = card.querySelector(".ticket-badge");
 
                 title.textContent = `Ticket ${index + 1}`;
+                if (badge) badge.textContent = index + 1;
 
             });
 

@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 from difflib import get_close_matches
 import pandas as pd
 import io
-from config import TEAM_MAPPING, SUBCATEGORY_MAPPING
+from config import QUERY_MAPPING, TEAM_MAPPING, SUBCATEGORY_MAPPING
 
 
 def extract(pattern, text):
@@ -128,6 +128,25 @@ def extract_resolved_date(text: str):
     # fallback → today in mm-dd-yyyy
     return datetime.now(ZoneInfo("Asia/Kolkata")).strftime("%m-%d-%Y")
 
+def detect_query_type(ticket_text):
+    """
+    Captures the 'Query Type' field (sits between Subcategory and
+    Actual Subcategory in the ticket dump) and matches it exactly
+    (case-insensitive) against QUERY_MAPPING.
+    """
+
+    query_type = extract(r"Query Type\s*[:\-]?\s*(.+)", ticket_text)
+
+    if not query_type:
+        return "", ""
+
+    qt_clean = normalize(query_type)
+
+    for query_name in QUERY_MAPPING:
+        if qt_clean == normalize(query_name):
+            return query_name, QUERY_MAPPING[query_name].get("group", "")
+
+    return "", ""
 
 def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
 
@@ -196,6 +215,10 @@ def parse_ticket(ticket_text, assigned_by_global,assigned_by_ticket):
     category, query, group = detect_category(ticket_text)
     team = detect_team(assigned_to)
 
+    qt_query, qt_group = detect_query_type(ticket_text)
+    if qt_query:
+       query = qt_query
+       group = qt_group or group
     resolvedDate= ""
     resolvedField = ""
     tat = None
